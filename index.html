@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CHUNITHM Update Estimator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Estimate international CHUNITHM update dates based on Japanese release dates, adjusted to the nearest Thursday.">
+  <style>
+    body { 
+      font-family: system-ui, sans-serif; 
+      margin: 20px; 
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+    input, button { 
+      padding: 6px; 
+      margin-top: 6px; 
+      background: #1e1e1e;
+      color: #f0f0f0;
+      border: 1px solid #333;
+      border-radius: 4px;
+    }
+    button:hover {
+      background: #333;
+      cursor: pointer;
+    }
+    .result { 
+      margin-top: 12px; 
+      font-weight: bold; 
+      color: #90caf9;
+    }
+  </style>
+</head>
+<body>
+  <h1>CHUNITHM Update Date Estimator</h1>
+  <p>Enter the Japanese release date:</p>
+  <input type="date" id="jpDate">
+  <br>
+  <button onclick="estimate()">Estimate International Date</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    function estimate() {
+      const jpDateStr = document.getElementById("jpDate").value;
+      if (!jpDateStr) {
+        document.getElementById("result").textContent = "Please select a date.";
+        return;
+      }
+
+      let jpDate = new Date(jpDateStr);
+
+      // Add ~4 months
+      let intlDate = new Date(jpDate);
+      intlDate.setMonth(intlDate.getMonth() + 4);
+
+      // Adjust to nearest Thursday
+      let day = intlDate.getDay(); // 0=Sunday ... 4=Thursday
+      let offset = 4 - day; 
+      if (offset > 3) offset -= 7;  // if too far ahead, go backward
+      if (offset < -3) offset += 7; // if too far back, go forward
+      intlDate.setDate(intlDate.getDate() + offset);
+
+      // Format nicely
+      const options = { year: "numeric", month: "long", day: "numeric", weekday: "long" };
+      const formatted = intlDate.toLocaleDateString(undefined, options);
+
+      document.getElementById("result").textContent = "Estimated International Release: " + formatted;
+    }
+  </script>
+</body>
+</html>

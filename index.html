@@ -67,6 +67,14 @@
 
       document.getElementById("result").textContent = "Estimated International Release: " + formatted;
     }
+
+    // Allow pressing Enter to trigger estimation
+    document.getElementById("jpDate").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        estimate();
+      }
+    });
   </script>
 </body>
 </html>
